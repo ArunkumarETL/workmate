@@ -1,0 +1,63 @@
+{
+  "sites": {
+    "site1": {
+      "name": "Apartment Site",
+      "location": "Downtown",
+      "client": "John Doe",
+      "startDate": "2026-01-01",
+      "status": "Active"
+    },
+    "site2": {
+      "name": "Villa Project",
+      "location": "Uptown",
+      "client": "Jane Smith",
+      "startDate": "2025-09-15",
+      "status": "Active"
+    }
+  },
+  "workers": {
+    "worker1": {
+      "name": "Ali Khan",
+      "email": "ali.khan@example.com",
+      "siteIds": ["site1"]
+    },
+    "worker2": {
+      "name": "Maria Garcia",
+      "email": "maria.garcia@example.com",
+      "siteIds": ["site1", "site2"]
+    }
+  },
+  "attendance": {
+    "record1": {
+      "workerId": "worker1",
+      "siteId": "site1",
+      "date": "2026-05-22",
+      "present": true
+    },
+    "record2": {
+      "workerId": "worker2",
+      "siteId": "site2",
+      "date": "2026-05-22",
+      "present": false
+    }
+  },
+  "salary": {
+    "salary1": {
+      "workerId": "worker1",
+      "siteId": "site1",
+      "dailyWage": 120,
+      "advances": [
+        { "amount": 200, "date": "2026-04-01" }
+      ],
+      "paid": 480
+    }
+  },
+  "expenses": {
+    "exp1": {
+      "siteId": "site1",
+      "description": "Cement purchase",
+      "amount": 1500,
+      "date": "2026-05-10"
+    }
+  }
+}

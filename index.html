@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkMate – Firebase Demo</title>
+</head>
+<body>
+  <h1>WorkMate Demo (Firebase Realtime Database)</h1>
+  <p>This page initializes Firebase and writes a small set of mock data to the Realtime Database.</p>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import the Firebase products you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3tckDMyG8_GsHWF6BV-dus-qGFj8mMC4",
+      authDomain: "workmate-c9928.firebaseapp.com",
+      databaseURL: "https://workmate-c9928-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "workmate-c9928",
+      storageBucket: "workmate-c9928.firebasestorage.app",
+      messagingSenderId: "1067562101456",
+      appId: "1:1067562101456:web:63e53fad264f6b6fe1ccd5",
+      measurementId: "G-NNLBJK92KY"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+
+    // Load sample mock data from a local JSON file (mock-data.json)
+    async function loadMockData() {
+      try {
+        const response = await fetch('mock-data.json');
+        const data = await response.json();
+        // Write the whole object under a root node called "demo"
+        await set(ref(db, 'demo'), data);
+        console.log('✅ Mock data written to Firebase Realtime Database');
+      } catch (e) {
+        console.error('❌ Failed to write mock data:', e);
+      }
+    }
+
+    // Run on page load
+    loadMockData();
+  </script>
+</body>
+</html>
