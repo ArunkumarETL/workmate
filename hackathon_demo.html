@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Model Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-2xl w-full bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700">
+        <h1 class="text-3xl font-bold text-amber-500 mb-2">Hackathon Model UI</h1>
+        <p class="text-gray-400 mb-6">No Node.js needed. Just double click this file to open it in Chrome!</p>
+        
+        <!-- STEP 1: Put Colab URL here -->
+        <div class="mb-6">
+            <label class="block text-sm font-semibold mb-2">1. Paste your Colab (Localtunnel) URL here:</label>
+            <input type="text" id="colabUrl" placeholder="https://your-url.loca.lt" 
+                class="w-full p-3 rounded-lg bg-gray-900 border border-gray-600 focus:border-amber-500 focus:outline-none text-white">
+        </div>
+
+        <!-- STEP 2: Input Data -->
+        <div class="mb-6">
+            <label class="block text-sm font-semibold mb-2">2. Enter prompt/input for the model:</label>
+            <textarea id="promptInput" rows="4" placeholder="Type your input here..."
+                class="w-full p-3 rounded-lg bg-gray-900 border border-gray-600 focus:border-amber-500 focus:outline-none text-white"></textarea>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button onclick="runModel()" id="submitBtn"
+            class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 font-bold py-3 px-4 rounded-lg transition-all shadow-lg active:scale-95">
+            Run Model
+        </button>
+
+        <!-- OUTPUT BOX -->
+        <div class="mt-8">
+            <label class="block text-sm font-semibold mb-2 text-gray-300">Model Output:</label>
+            <div id="outputBox" class="w-full min-h-[100px] p-4 rounded-lg bg-gray-900 border border-gray-700 text-green-400 font-mono whitespace-pre-wrap">
+                Waiting for input...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runModel() {
+            const baseUrl = document.getElementById("colabUrl").value.trim();
+            const prompt = document.getElementById("promptInput").value;
+            const outputBox = document.getElementById("outputBox");
+            const btn = document.getElementById("submitBtn");
+
+            if (!baseUrl) {
+                alert("Please paste the Localtunnel URL from Colab first!");
+                return;
+            }
+
+            // Clean trailing slash
+            const cleanUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+            const apiUrl = cleanUrl + "/api/run-model";
+
+            outputBox.innerText = "Running model... please wait...";
+            outputBox.classList.remove("text-red-400", "text-green-400");
+            outputBox.classList.add("text-yellow-400");
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Bypass-Tunnel-Reminder": "true" // CRITICAL FOR LOCALTUNNEL!
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                if (!response.ok) throw new Error("Server error: " + response.status);
+                
+                const data = await response.json();
+                
+                outputBox.innerText = data.output || JSON.stringify(data, null, 2);
+                outputBox.classList.remove("text-yellow-400");
+                outputBox.classList.add("text-green-400");
+                
+            } catch (error) {
+                console.error("Error:", error);
+                outputBox.innerText = "Error connecting to model.\n\nMake sure your Colab cell is still running, and that you pasted the correct URL.";
+                outputBox.classList.remove("text-yellow-400");
+                outputBox.classList.add("text-red-400");
+            } finally {
+                btn.innerText = "Run Model";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
