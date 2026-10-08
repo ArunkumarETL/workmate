@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Hammer, Mail, Lock, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Hammer, Mail, Lock, AlertTriangle, ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Login() {
@@ -12,7 +12,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { user, login } = useAuth();
+  const { user, login, demoLogin } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -40,6 +40,11 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoAccess = () => {
+    demoLogin();
+    router.push('/dashboard');
   };
 
   return (
@@ -85,7 +90,7 @@ export default function Login() {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2" htmlFor="login-email">
                 Manager Email
@@ -147,6 +152,17 @@ export default function Login() {
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={handleDemoAccess}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="w-full flex items-center justify-center gap-2 py-3 bg-zinc-900/60 border border-white/10 hover:bg-zinc-900 text-amber-500 font-bold rounded-xl transition-all text-xs"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>Instant Demo Access</span>
             </motion.button>
           </form>
 
